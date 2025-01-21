@@ -1,0 +1,273 @@
+﻿<Page
+    x:Class="Drishya.Views.NormalSortingView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Drishya.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
+    Title="NormalSortingView"
+    Background="#1D1616"
+    Foreground="#EEEEEE"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Padding" Value="0,2.5" />
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="0,5" />
+            <Setter Property="Background" Value="#1D1616" />
+            <Setter Property="Foreground" Value="#EEEEEE" />
+            <Setter Property="BorderBrush" Value="#8E1616" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="2.5,5" />
+            <Setter Property="Background" Value="#8E1616" />
+            <Setter Property="Foreground" Value="#EEEEEE" />
+            <Setter Property="BorderBrush" Value="#8E1616" />
+        </Style>
+        <Style TargetType="GroupBox">
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#8E1616" />
+        </Style>
+        <Style TargetType="Slider">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="2.5,0" />
+            <Setter Property="Foreground" Value="#EEEEEE" />
+        </Style>
+        <Style TargetType="StatusBar">
+            <Setter Property="Background" Value="#1D1616" />
+            <Setter Property="Foreground" Value="#EEEEEE" />
+        </Style>
+
+    </Page.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid
+            x:Name="VideoPlayerGrid"
+            Grid.Column="0"
+            Margin="0,0,20,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TextBlock
+                x:Name="MetadataTitleTB"
+                Grid.Row="0"
+                FontSize="24"
+                Text="Search a folder to get started!"
+                TextWrapping="WrapWithOverflow" />
+            <vlc:VideoView x:Name="VideoPlayerVW" Grid.Row="1" />
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="110" />
+                    <ColumnDefinition Width="40" />
+                </Grid.ColumnDefinitions>
+                <Button
+                    x:Name="PlayButton"
+                    Grid.Column="0"
+                    Click="PlayButton_Click"
+                    Content="▶" />
+                <TextBlock
+                    x:Name="ElapsedTimeLabel"
+                    Grid.Column="1"
+                    VerticalAlignment="Center"
+                    Text="--:--" />
+                <Slider
+                    x:Name="SeekVideoSlider"
+                    Grid.Column="2"
+                    ValueChanged="SeekVideoSlider_ValueChanged" />
+                <TextBlock
+                    x:Name="TotalTimeLabel"
+                    Grid.Column="3"
+                    VerticalAlignment="Center"
+                    Text="--:--" />
+                <!--<Button Grid.Column="4" Content="🔁" />-->
+                <Button
+                    Grid.Column="4"
+                    Click="TakeScreenshot_Click"
+                    Content="📸" />
+
+                <Button
+                    x:Name="StopButton"
+                    Grid.Column="5"
+                    Click="StopButton_Click"
+                    Content="⏹" />
+                <Button
+                    x:Name="SkipButton"
+                    Grid.Column="6"
+                    Click="SkipVideo_Click"
+                    Content="⏩" />
+
+                <Slider
+                    x:Name="VolumeSlider"
+                    Grid.Column="7"
+                    Maximum="100"
+                    Minimum="0"
+                    TickFrequency="5"
+                    ValueChanged="VolumeSlider_ValueChanged" />
+                <Button
+                    x:Name="MuteButton"
+                    Grid.Column="8"
+                    Click="MuteButton_Click"
+                    Content="🔇" />
+
+            </Grid>
+        </Grid>
+        <ScrollViewer
+            Grid.Column="1"
+            HorizontalScrollBarVisibility="Hidden"
+            VerticalScrollBarVisibility="Auto">
+            <StackPanel Grid.Column="1">
+                <TextBlock
+                    Margin="5"
+                    FontFamily="Poppins"
+                    FontSize="16"
+                    Text="दृश्य Drishya" />
+                <StackPanel>
+                    <GroupBox Header="Select Folder">
+                        <StackPanel>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox
+                                    x:Name="FolderPathContainerTB"
+                                    Margin="0"
+                                    IsReadOnly="True"
+                                    Text="Select a folder" />
+                                <Button
+                                    Grid.Column="1"
+                                    Margin="2.5,0,0,0"
+                                    Click="VideoFolderBrowse_Click"
+                                    Content="Browse" />
+                                <Rectangle Cursor="Hand" Fill="Transparent">
+                                    <Rectangle.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Click="VideoFolderMenuItem_Click" Header="Show in Folder" />
+                                        </ContextMenu>
+                                    </Rectangle.ContextMenu>
+                                </Rectangle>
+                            </Grid>
+                            <Button
+                                Margin="0,2.5"
+                                Click="SearchButton_Click"
+                                Content="Search" />
+                        </StackPanel>
+
+                    </GroupBox>
+                    <GroupBox Header="Metadata">
+                        <StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Location" />
+                                <TextBox x:Name="MetadataLocationTB" IsReadOnly="True" />
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="Contol">
+                        <StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Rename Title" />
+                                <TextBox x:Name="ControlNameTB" />
+                            </StackPanel>
+                            <StackPanel>
+                                <Button
+                                    Margin="0,2.5"
+                                    Click="ProcessVideo_Click"
+                                    Content="Process" />
+                                <UniformGrid Margin="0,2.5" Columns="2">
+                                    <Button
+                                        Margin="0,0,1.5,0"
+                                        Click="PreviousVideo_Click"
+                                        Content="Previous" />
+                                    <Button
+                                        Margin="1.5,0,0,0"
+                                        Click="SkipVideo_Click"
+                                        Content="Next" />
+                                </UniformGrid>
+                                <Button
+                                    Margin="0,2.5"
+                                    Click="DeleteVideo_Click"
+                                    Content="Delete" />
+                            </StackPanel>
+                        </StackPanel>
+                    </GroupBox>
+
+                    <GroupBox Header="Screenshotter">
+                        <StackPanel>
+                            <TextBlock Text="Take screenshot" />
+                            <ComboBox x:Name="ScreenshotIntervalCB" SelectionChanged="ScreenshotIntervalCB_SelectionChanged">
+                                <ComboBoxItem Tag="0.5">Every half a second</ComboBoxItem>
+                                <ComboBoxItem Tag="1.0">Every second</ComboBoxItem>
+                                <ComboBoxItem Tag="2.0">Every 2 seconds</ComboBoxItem>
+                                <ComboBoxItem Tag="5.0">Every 5 seconds</ComboBoxItem>
+                                <ComboBoxItem Tag="10.0">Every 10 seconds</ComboBoxItem>
+                            </ComboBox>
+                            <TextBlock Text="And save in" />
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox
+                                    x:Name="ScreenshotPathContainerTB"
+                                    Margin="0"
+                                    IsReadOnly="True"
+                                    Text="Select a folder" />
+                                <Button
+                                    Grid.Column="1"
+                                    Margin="2.5,0,0,0"
+                                    Click="ScreenshotFolderBrowse_Click"
+                                    Content="Browse" />
+                                <Rectangle Cursor="Hand" Fill="Transparent">
+                                    <Rectangle.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Click="ScreenshotFolderMenuItem_Click" Header="Show in Folder" />
+                                        </ContextMenu>
+                                    </Rectangle.ContextMenu>
+                                </Rectangle>
+                            </Grid>
+                            <Button
+                                x:Name="TakeMultipleScreenshotsButton"
+                                Margin="0,2.5"
+                                Click="TakeMultipleScreenshots_Click"
+                                Content="Take Screenshots" />
+                            <TextBlock x:Name="ScreenshotStatusLabel" Text="Ready" />
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="2">
+            <StatusBarItem>
+                <TextBlock x:Name="StatusLabel" Text="Ready" />
+            </StatusBarItem>
+            <StatusBarItem Margin="10,0,0,0">
+                <TextBlock x:Name="CountLabel" Text="--/--" />
+            </StatusBarItem>
+
+        </StatusBar>
+    </Grid>
+</Page>
