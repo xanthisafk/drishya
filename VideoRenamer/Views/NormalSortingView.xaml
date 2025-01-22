@@ -5,45 +5,26 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Drishya.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:resx="clr-namespace:Drishya.Properties"
     xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
     Title="NormalSortingView"
-    Background="#1D1616"
-    Foreground="#EEEEEE"
+    KeyDown="Page_KeyDown"
     mc:Ignorable="d">
 
     <Page.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="Padding" Value="0,2.5" />
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="Padding" Value="5" />
-            <Setter Property="Margin" Value="0,5" />
-            <Setter Property="Background" Value="#1D1616" />
-            <Setter Property="Foreground" Value="#EEEEEE" />
-            <Setter Property="BorderBrush" Value="#8E1616" />
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="Padding" Value="5" />
-            <Setter Property="Margin" Value="2.5,5" />
-            <Setter Property="Background" Value="#8E1616" />
-            <Setter Property="Foreground" Value="#EEEEEE" />
-            <Setter Property="BorderBrush" Value="#8E1616" />
-        </Style>
-        <Style TargetType="GroupBox">
+        <Style BasedOn="{StaticResource MaterialDesignBody1TextBlock}" TargetType="TextBlock" />
+        <Style BasedOn="{StaticResource MaterialDesignTextBox}" TargetType="TextBox" />
+        <Style BasedOn="{StaticResource MaterialDesignFlatDarkBgButton}" TargetType="Button" />
+        <Style BasedOn="{StaticResource MaterialDesignCardGroupBox}" TargetType="GroupBox">
             <Setter Property="Padding" Value="5" />
             <Setter Property="Margin" Value="5" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="BorderBrush" Value="#8E1616" />
         </Style>
-        <Style TargetType="Slider">
+        <Style BasedOn="{StaticResource MaterialDesignSlider}" TargetType="Slider">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="2.5,0" />
-            <Setter Property="Foreground" Value="#EEEEEE" />
         </Style>
-        <Style TargetType="StatusBar">
-            <Setter Property="Background" Value="#1D1616" />
-            <Setter Property="Foreground" Value="#EEEEEE" />
-        </Style>
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
 
     </Page.Resources>
 
@@ -68,61 +49,99 @@
             <TextBlock
                 x:Name="MetadataTitleTB"
                 Grid.Row="0"
-                FontSize="24"
+                Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                 Text="Search a folder to get started!"
                 TextWrapping="WrapWithOverflow" />
             <vlc:VideoView x:Name="VideoPlayerVW" Grid.Row="1" />
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="50" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="110" />
-                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="50" />
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="50" />
                 </Grid.ColumnDefinitions>
                 <Button
                     x:Name="PlayButton"
                     Grid.Column="0"
+                    MinWidth="50"
+                    Margin="0,0,1.5,0"
                     Click="PlayButton_Click"
-                    Content="▶" />
+                    ToolTip="Play">
+                    <Image
+                        Width="24"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Source="pack://application:,,,/Resources/play.png" />
+                </Button>
                 <TextBlock
                     x:Name="ElapsedTimeLabel"
                     Grid.Column="1"
+                    Margin="0,0,1.5,0"
                     VerticalAlignment="Center"
-                    Text="--:--" />
+                    Text="--:--"
+                    ToolTip="Time Elapsed" />
                 <Slider
                     x:Name="SeekVideoSlider"
                     Grid.Column="2"
+                    Margin="0,0,1.5,0"
                     ValueChanged="SeekVideoSlider_ValueChanged" />
                 <TextBlock
                     x:Name="TotalTimeLabel"
                     Grid.Column="3"
+                    Margin="0,0,1.5,0"
                     VerticalAlignment="Center"
-                    Text="--:--" />
-                <!--<Button Grid.Column="4" Content="🔁" />-->
+                    Text="--:--"
+                    ToolTip="Total Time" />
                 <Button
+                    x:Name="SingleScreenshotButton"
                     Grid.Column="4"
+                    MinWidth="50"
+                    Margin="0,0,1.5,0"
                     Click="TakeScreenshot_Click"
-                    Content="📸" />
+                    ToolTip="Take Single Screenshot">
+                    <Image
+                        Width="24"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Source="pack://application:,,,/Resources/camera.png" />
+                </Button>
 
                 <Button
                     x:Name="StopButton"
                     Grid.Column="5"
+                    MinWidth="50"
+                    Margin="0,0,1.5,0"
                     Click="StopButton_Click"
-                    Content="⏹" />
+                    ToolTip="Stop">
+                    <Image
+                        Width="24"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Source="pack://application:,,,/Resources/stop.png" />
+                </Button>
                 <Button
                     x:Name="SkipButton"
                     Grid.Column="6"
+                    MinWidth="50"
+                    Margin="0,0,1.5,0"
                     Click="SkipVideo_Click"
-                    Content="⏩" />
+                    ToolTip="Next">
+                    <Image
+                        Width="24"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Source="pack://application:,,,/Resources/next.png" />
+                </Button>
 
                 <Slider
                     x:Name="VolumeSlider"
                     Grid.Column="7"
+                    Margin="0,0,1.5,0"
                     Maximum="100"
                     Minimum="0"
                     TickFrequency="5"
@@ -130,21 +149,29 @@
                 <Button
                     x:Name="MuteButton"
                     Grid.Column="8"
+                    MinWidth="50"
+                    Margin="0,0,1.5,0"
                     Click="MuteButton_Click"
-                    Content="🔇" />
+                    ToolTip="Mute">
+                    <Image
+                        Width="24"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Source="pack://application:,,,/Resources/volume_off.png" />
+                </Button>
 
             </Grid>
         </Grid>
         <ScrollViewer
             Grid.Column="1"
-            HorizontalScrollBarVisibility="Hidden"
+            HorizontalScrollBarVisibility="Disabled"
             VerticalScrollBarVisibility="Auto">
             <StackPanel Grid.Column="1">
                 <TextBlock
                     Margin="5"
                     FontFamily="Poppins"
-                    FontSize="16"
-                    Text="दृश्य Drishya" />
+                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                    Text="दृश्य || Drishya" />
                 <StackPanel>
                     <GroupBox Header="Select Folder">
                         <StackPanel>
@@ -155,117 +182,319 @@
                                 </Grid.ColumnDefinitions>
                                 <TextBox
                                     x:Name="FolderPathContainerTB"
-                                    Margin="0"
+                                    VerticalAlignment="Center"
                                     IsReadOnly="True"
                                     Text="Select a folder" />
                                 <Button
                                     Grid.Column="1"
                                     Margin="2.5,0,0,0"
                                     Click="VideoFolderBrowse_Click"
-                                    Content="Browse" />
-                                <Rectangle Cursor="Hand" Fill="Transparent">
-                                    <Rectangle.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Click="VideoFolderMenuItem_Click" Header="Show in Folder" />
-                                        </ContextMenu>
-                                    </Rectangle.ContextMenu>
-                                </Rectangle>
+                                    Style="{StaticResource MaterialDesignOutlinedButton}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image
+                                            Width="24"
+                                            Margin="0,0,1.5,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Source="pack://application:,,,/Resources/folder_blue.png" />
+                                        <TextBlock VerticalAlignment="Center" Text="Browse" />
+                                    </StackPanel>
+                                </Button>
+                                <Rectangle
+                                    Cursor="Hand"
+                                    Fill="Transparent"
+                                    MouseDown="VideoFolderMenuItem_Click" />
                             </Grid>
-                            <Button
-                                Margin="0,2.5"
-                                Click="SearchButton_Click"
-                                Content="Search" />
-                        </StackPanel>
+                            <CheckBox
+                                x:Name="IncludeAlreadySortedCheckbox"
+                                VerticalAlignment="Center"
+                                Checked="IncludeAlreadySortedCheckbox_Checked"
+                                Content="Include already sorted"
+                                Unchecked="IncludeAlreadySortedCheckbox_Unchecked" />
+                            <Button Margin="0,2.5" Click="SearchButton_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image
+                                        Width="24"
+                                        Margin="0,0,1.5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Source="pack://application:,,,/Resources/search.png" />
+                                    <TextBlock VerticalAlignment="Center" Text="Search" />
+                                </StackPanel>
+                            </Button>
+                            <!--  This One  -->
+                            <Grid MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=GroupBox}}" Margin="0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Margin="0,0,5,0"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHelperTextBlock}"
+                                    Text="Current video" />
 
-                    </GroupBox>
-                    <GroupBox Header="Metadata">
-                        <StackPanel>
-                            <StackPanel>
-                                <TextBlock Text="Location" />
-                                <TextBox x:Name="MetadataLocationTB" IsReadOnly="True" />
-                            </StackPanel>
+                                <TextBlock
+                                    x:Name="MetadataLocationLabel"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHelperTextBlock}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="Wrap" />
+
+                                <Rectangle
+                                    Grid.ColumnSpan="2"
+                                    Cursor="Hand"
+                                    Fill="Transparent"
+                                    MouseDown="CurrentVideoLabel_MouseDown" />
+                            </Grid>
                         </StackPanel>
                     </GroupBox>
                     <GroupBox Header="Contol">
                         <StackPanel>
                             <StackPanel>
-                                <TextBlock Text="Rename Title" />
+                                <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="Rename video to" />
                                 <TextBox x:Name="ControlNameTB" />
                             </StackPanel>
+                            <Grid Margin="0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="1*" />
+                                </Grid.ColumnDefinitions>
+                                <CheckBox
+                                    x:Name="MoveSortedVideoCheckbox"
+                                    Margin="0,0,5,5"
+                                    VerticalAlignment="Center"
+                                    Checked="MoveSortedVideoCheckbox_Checked"
+                                    Content="And move to"
+                                    Unchecked="MoveSortedVideoCheckbox_Unchecked" />
+                                <Grid Grid.Column="1" Visibility="{Binding ElementName=MoveSortedVideoCheckbox, Path=IsChecked, Converter={StaticResource BoolToVis}}">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox
+                                        x:Name="DestinationPathContainerTB"
+                                        VerticalAlignment="Center"
+                                        IsReadOnly="True"
+                                        Text="Select a folder" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Margin="2.5,0,0,0"
+                                        Click="DestinationFolderBrowse_Click"
+                                        Style="{StaticResource MaterialDesignOutlinedButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image
+                                                Width="24"
+                                                Margin="0,0,1.5,0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Source="pack://application:,,,/Resources/folder_blue.png" />
+                                            <TextBlock VerticalAlignment="Center" Text="Browse" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Rectangle
+                                        Cursor="Hand"
+                                        Fill="Transparent"
+                                        MouseDown="DestinationFolderMenuItem_Click" />
+                                </Grid>
+                            </Grid>
+                            <Grid Margin="0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHelperTextBlock}"
+                                    Text="Sorted video postfix"
+                                    ToolTip="Text added at the end of processed video. It is used to flag video as processed" />
+                                <TextBox
+                                    x:Name="PostfixTB"
+                                    Grid.Column="1"
+                                    VerticalAlignment="Center"
+                                    TextChanged="PostfixTB_TextChanged" />
+                            </Grid>
                             <StackPanel>
-                                <Button
-                                    Margin="0,2.5"
-                                    Click="ProcessVideo_Click"
-                                    Content="Process" />
+                                <Button Margin="0,2.5" Click="ProcessVideo_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image
+                                            Width="24"
+                                            Margin="0,0,1.5,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Source="pack://application:,,,/Resources/wrench.png" />
+                                        <TextBlock VerticalAlignment="Center" Text="Process" />
+                                    </StackPanel>
+                                </Button>
                                 <UniformGrid Margin="0,2.5" Columns="2">
                                     <Button
                                         Margin="0,0,1.5,0"
                                         Click="PreviousVideo_Click"
-                                        Content="Previous" />
+                                        Style="{StaticResource MaterialDesignOutlinedButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image
+                                                Width="24"
+                                                Margin="0,0,1.5,0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Source="pack://application:,,,/Resources/previous_blue.png" />
+                                            <TextBlock VerticalAlignment="Center" Text="Previous" />
+                                        </StackPanel>
+                                    </Button>
                                     <Button
                                         Margin="1.5,0,0,0"
                                         Click="SkipVideo_Click"
-                                        Content="Next" />
+                                        Style="{StaticResource MaterialDesignOutlinedButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock VerticalAlignment="Center" Text="Next" />
+                                            <Image
+                                                Width="24"
+                                                Margin="0,0,1.5,0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Source="pack://application:,,,/Resources/next_blue.png" />
+
+                                        </StackPanel>
+                                    </Button>
                                 </UniformGrid>
                                 <Button
                                     Margin="0,2.5"
                                     Click="DeleteVideo_Click"
-                                    Content="Delete" />
+                                    Style="{StaticResource MaterialDesignOutlinedSecondaryButton}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image
+                                            Width="24"
+                                            Margin="0,0,1.5,0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Source="pack://application:,,,/Resources/delete_red.png" />
+                                        <TextBlock VerticalAlignment="Center" Text="Delete" />
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
                         </StackPanel>
                     </GroupBox>
 
                     <GroupBox Header="Screenshotter">
                         <StackPanel>
-                            <TextBlock Text="Take screenshot" />
-                            <ComboBox x:Name="ScreenshotIntervalCB" SelectionChanged="ScreenshotIntervalCB_SelectionChanged">
-                                <ComboBoxItem Tag="0.5">Every half a second</ComboBoxItem>
-                                <ComboBoxItem Tag="1.0">Every second</ComboBoxItem>
-                                <ComboBoxItem Tag="2.0">Every 2 seconds</ComboBoxItem>
-                                <ComboBoxItem Tag="5.0">Every 5 seconds</ComboBoxItem>
-                                <ComboBoxItem Tag="10.0">Every 10 seconds</ComboBoxItem>
-                            </ComboBox>
-                            <TextBlock Text="And save in" />
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBox
-                                    x:Name="ScreenshotPathContainerTB"
-                                    Margin="0"
-                                    IsReadOnly="True"
-                                    Text="Select a folder" />
-                                <Button
+                                <TextBlock
+                                    Margin="0,0,5,0"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHelperTextBlock}"
+                                    Text="Take screenshot" />
+                                <ComboBox
+                                    x:Name="ScreenshotIntervalCB"
                                     Grid.Column="1"
-                                    Margin="2.5,0,0,0"
-                                    Click="ScreenshotFolderBrowse_Click"
-                                    Content="Browse" />
-                                <Rectangle Cursor="Hand" Fill="Transparent">
-                                    <Rectangle.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Click="ScreenshotFolderMenuItem_Click" Header="Show in Folder" />
-                                        </ContextMenu>
-                                    </Rectangle.ContextMenu>
-                                </Rectangle>
+                                    VerticalAlignment="Center"
+                                    SelectionChanged="ScreenshotIntervalCB_SelectionChanged">
+                                    <ComboBoxItem Tag="255">Every frame</ComboBoxItem>
+                                    <ComboBoxItem Tag="0.1">Every 10th of a second</ComboBoxItem>
+                                    <ComboBoxItem Tag="0.5">Every half a second</ComboBoxItem>
+                                    <ComboBoxItem Tag="1.0">Every second</ComboBoxItem>
+                                    <ComboBoxItem Tag="2.0">Every 2 seconds</ComboBoxItem>
+                                    <ComboBoxItem Tag="3.0">Every 3 seconds</ComboBoxItem>
+                                    <ComboBoxItem Tag="5.0">Every 5 seconds</ComboBoxItem>
+                                    <ComboBoxItem Tag="7.0">Every 7 seconds</ComboBoxItem>
+                                    <ComboBoxItem Tag="10.0">Every 10 seconds</ComboBoxItem>
+                                    <ComboBoxItem Tag="30.0">Every 30 seconds</ComboBoxItem>
+                                </ComboBox>
                             </Grid>
+                            <Grid Margin="0,5">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Margin="0,0,5,0"
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHelperTextBlock}"
+                                    Text="And save in" />
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox
+                                        x:Name="ScreenshotPathContainerTB"
+                                        Margin="0"
+                                        IsReadOnly="True"
+                                        Text="Select a folder" />
+                                    <Button
+                                        Grid.Column="1"
+                                        Margin="2.5,0,0,0"
+                                        Click="ScreenshotFolderBrowse_Click"
+                                        Style="{StaticResource MaterialDesignOutlinedButton}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image
+                                                Width="24"
+                                                Margin="0,0,1.5,0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Source="pack://application:,,,/Resources/folder_blue.png" />
+                                            <TextBlock VerticalAlignment="Center" Text="Browse" />
+                                        </StackPanel>
+                                    </Button>
+                                    <Rectangle
+                                        Cursor="Hand"
+                                        Fill="Transparent"
+                                        MouseDown="ScreenshotFolderMenuItem_Click" />
+                                </Grid>
+                            </Grid>
+                            <CheckBox
+                                x:Name="ShouldScreenshotSubfolderCheckbox"
+                                VerticalAlignment="Center"
+                                Checked="ShouldScreenshotSubfolderCheckbox_Checked"
+                                Content="Create subfolder for each video"
+                                Unchecked="ShouldScreenshotSubfolderCheckbox_Unchecked" />
                             <Button
                                 x:Name="TakeMultipleScreenshotsButton"
                                 Margin="0,2.5"
-                                Click="TakeMultipleScreenshots_Click"
-                                Content="Take Screenshots" />
-                            <TextBlock x:Name="ScreenshotStatusLabel" Text="Ready" />
+                                Click="TakeMultipleScreenshots_Click">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image
+                                        Width="24"
+                                        Margin="0,0,1.5,0"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Source="pack://application:,,,/Resources/camera.png" />
+                                    <TextBlock VerticalAlignment="Center" Text="Take Screenshots" />
+                                </StackPanel>
+                            </Button>
+                            <TextBlock
+                                x:Name="ScreenshotStatusLabel"
+                                Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                Text="Ready" />
                         </StackPanel>
                     </GroupBox>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>
         <StatusBar Grid.Row="1" Grid.ColumnSpan="2">
-            <StatusBarItem>
-                <TextBlock x:Name="StatusLabel" Text="Ready" />
+            <StatusBarItem x:Name="DebugStatusBarItem" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="DebugLabel" />
+                </StackPanel>
             </StatusBarItem>
-            <StatusBarItem Margin="10,0,0,0">
-                <TextBlock x:Name="CountLabel" Text="--/--" />
+            <StatusBarItem>
+                <TextBlock
+                    x:Name="StatusLabel"
+                    Style="{StaticResource MaterialDesignHelperTextBlock}"
+                    Text="Ready"
+                    Visibility="Collapsed" />
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock
+                    x:Name="CountLabel"
+                    Style="{StaticResource MaterialDesignHelperTextBlock}"
+                    Text="--/--" />
             </StatusBarItem>
 
         </StatusBar>

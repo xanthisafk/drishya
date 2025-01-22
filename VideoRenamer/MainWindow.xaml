@@ -6,6 +6,8 @@
     xmlns:local="clr-namespace:Drishya"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Drishya"
+    Style="{StaticResource MaterialDesignWindow}"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
     <Frame x:Name="NormalSortingViewTab" Source="/Views/NormalSortingView.xaml" />
 </Window>
