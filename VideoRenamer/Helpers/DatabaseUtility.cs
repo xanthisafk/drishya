@@ -1,4 +1,6 @@
 ﻿using Drishya.Properties;
+using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 
 namespace Drishya.Helpers
@@ -15,129 +17,107 @@ namespace Drishya.Helpers
 
         private void InitializeDatabase()
         {
-            string createTableQuery = "CREATE TABLE IF NOT EXISTS tags (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT UNIQUE);";
+            const string createTableQuery = "CREATE TABLE IF NOT EXISTS tags (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT UNIQUE, regex TEXT);";
             using var connection = new SQLiteConnection(_connectionString);
             connection.Open();
             using var command = new SQLiteCommand(createTableQuery, connection);
             command.ExecuteNonQuery();
         }
 
-        public bool InsertTag(string tagText)
+        public bool InsertTag(string tagText, string regexText)
         {
             try
             {
                 using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
                 using var transaction = connection.BeginTransaction();
-
-                string query = "INSERT INTO tags (text) VALUES (@text)";
+                const string query = "INSERT INTO tags (text, regex) VALUES (@text, @regex)";
                 using var command = new SQLiteCommand(query, connection, transaction);
                 command.Parameters.AddWithValue("@text", tagText);
-
-                try
-                {
-                    int result = command.ExecuteNonQuery();
-                    transaction.Commit();
-                    return result > 0;
-                }
-                catch (SQLiteException ex) when (ex.ErrorCode == (int)SQLiteErrorCode.Constraint)
-                {
-                    transaction.Rollback();
-                    return false;
-                }
+                command.Parameters.AddWithValue("@regex", regexText);
+                int result = command.ExecuteNonQuery();
+                transaction.Commit();
+                return result > 0;
             }
-            catch (Exception)
+            catch (SQLiteException ex) when (ex.ErrorCode == (int)SQLiteErrorCode.Constraint)
             {
-                throw;
+                Console.WriteLine($"Error: Duplicate tag entry - {ex.Message}");
+                return false;
             }
         }
 
-        public bool UpdateTag(string oldText, string newText)
+        public bool UpdateTag(string oldText, string newText, string regexText)
         {
             try
             {
                 using var connection = new SQLiteConnection(_connectionString);
                 connection.Open();
                 using var transaction = connection.BeginTransaction();
-
-                string query = "UPDATE tags SET text = @newText WHERE text = @oldText";
+                const string query = "UPDATE tags SET text = @newText, regex = @regexText WHERE text = @oldText";
                 using var command = new SQLiteCommand(query, connection, transaction);
                 command.Parameters.AddWithValue("@oldText", oldText);
                 command.Parameters.AddWithValue("@newText", newText);
-
-                try
-                {
-                    int result = command.ExecuteNonQuery();
-                    transaction.Commit();
-                    return result > 0;
-                }
-                catch (SQLiteException ex) when (ex.ErrorCode == (int)SQLiteErrorCode.Constraint)
-                {
-                    transaction.Rollback();
-                    return false;
-                }
+                command.Parameters.AddWithValue("@regexText", regexText);
+                int result = command.ExecuteNonQuery();
+                transaction.Commit();
+                return result > 0;
             }
-            catch (Exception)
+            catch (SQLiteException ex) when (ex.ErrorCode == (int)SQLiteErrorCode.Constraint)
             {
-                throw;
+                Console.WriteLine($"Error: Duplicate tag entry - {ex.Message}");
+                return false;
             }
         }
 
         public bool DeleteTag(string tagText)
         {
-            using var connection = new SQLiteConnection(_connectionString);
-            connection.Open();
-            using var transaction = connection.BeginTransaction();
-
-            string query = "DELETE FROM tags WHERE text = @text";
-            using var command = new SQLiteCommand(query, connection, transaction);
-            command.Parameters.AddWithValue("@text", tagText);
-
             try
             {
+                using var connection = new SQLiteConnection(_connectionString);
+                connection.Open();
+                using var transaction = connection.BeginTransaction();
+                const string query = "DELETE FROM tags WHERE text = @text";
+                using var command = new SQLiteCommand(query, connection, transaction);
+                command.Parameters.AddWithValue("@text", tagText);
                 int result = command.ExecuteNonQuery();
                 transaction.Commit();
                 return result > 0;
             }
-            catch
+            catch (Exception ex)
             {
-                transaction.Rollback();
-                throw;
+                Console.WriteLine($"Error deleting tag: {ex.Message}");
+                return false;
             }
         }
 
-        public List<string> GetAllTags()
+        public List<(string text, string regex)> GetAllTags()
         {
-            var tags = new List<string>();
+            var tags = new List<(string, string)>();
             using var connection = new SQLiteConnection(_connectionString);
             connection.Open();
-            string query = "SELECT text FROM tags ORDER BY text";
+            const string query = "SELECT text, regex FROM tags ORDER BY text";
             using var command = new SQLiteCommand(query, connection);
             using var reader = command.ExecuteReader();
-
             while (reader.Read())
             {
-                tags.Add(reader.GetString(0));
+                tags.Add((reader.GetString(0), reader.GetString(1)));
             }
-
             return tags;
         }
 
-        public List<string> SearchTags(string searchText)
+        public List<(string text, string regex)> SearchTags(string searchText)
         {
-            var tags = new List<string>();
+            var tags = new List<(string, string)>();
             using var connection = new SQLiteConnection(_connectionString);
             connection.Open();
-            string query = "SELECT text FROM tags WHERE text LIKE @searchText ORDER BY text";
+            const string query = "SELECT text, regex FROM tags WHERE text LIKE @searchText ORDER BY text";
             using var command = new SQLiteCommand(query, connection);
             command.Parameters.AddWithValue("@searchText", $"%{searchText}%");
             using var reader = command.ExecuteReader();
-
             while (reader.Read())
             {
-                tags.Add(reader.GetString(0));
+                tags.Add((reader.GetString(0), reader.GetString(1)));
             }
-
             return tags;
         }
     }

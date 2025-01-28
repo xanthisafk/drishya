@@ -8,6 +8,7 @@
     xmlns:resx="clr-namespace:Drishya.Properties"
     xmlns:vlc="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
     Title="NormalSortingView"
+    AllowDrop="True"
     KeyDown="Page_KeyDown"
     mc:Ignorable="d">
 
@@ -53,6 +54,57 @@
                 Text="Search a folder to get started!"
                 TextWrapping="WrapWithOverflow" />
             <vlc:VideoView x:Name="VideoPlayerVW" Grid.Row="1" />
+            <Grid
+                x:Name="ProcessingBlockerGrid"
+                Grid.Row="1"
+                Visibility="Collapsed">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignHeadline1TextBlock}"
+                    Text="Video is processing"
+                    TextWrapping="Wrap" />
+                <Rectangle Fill="{StaticResource MaterialDesignDarkSeparatorBackground}" />
+            </Grid>
+            <Grid
+                x:Name="DragDropGrid"
+                Grid.Row="1"
+                AllowDrop="True"
+                Drop="Grid_Drop"
+                Opacity="0">
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Grid.DragEnter">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                    Storyboard.TargetName="DragDropGrid"
+                                    Storyboard.TargetProperty="Opacity"
+                                    From="0"
+                                    To="1"
+                                    Duration="0:0:0.2" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Grid.DragLeave">
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation
+                                    Storyboard.TargetName="DragDropGrid"
+                                    Storyboard.TargetProperty="Opacity"
+                                    From="1"
+                                    To="0"
+                                    Duration="0:0:0.2" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger>
+                </Grid.Triggers>
+                <Rectangle Fill="LightGray" />
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignHeadline1TextBlock}"
+                    Text="Drop here" />
+            </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="50" />
@@ -222,7 +274,7 @@
                                     <TextBlock VerticalAlignment="Center" Text="Search" />
                                 </StackPanel>
                             </Button>
-                            <!--  This One  -->
+
                             <Grid MaxWidth="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=GroupBox}}" Margin="0,5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -251,12 +303,54 @@
                             </Grid>
                         </StackPanel>
                     </GroupBox>
-                    <GroupBox Header="Contol">
+                    <GroupBox Header="Process video">
                         <StackPanel>
                             <StackPanel>
                                 <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="Rename video to" />
                                 <TextBox x:Name="ControlNameTB" />
                             </StackPanel>
+                            <StackPanel Margin="0,5">
+                                <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="Change this text to" />
+                                <UniformGrid Columns="2">
+                                    <RadioButton
+                                        x:Name="TextCaseNoneRB"
+                                        Checked="TextCaseRB_Checked"
+                                        Content="Keep as is"
+                                        GroupName="TextCaseRB"
+                                        Tag="None"
+                                        ToolTip="Keep the text just as you have entered." />
+                                    <RadioButton
+                                        x:Name="TextCaseSentenceRB"
+                                        Checked="TextCaseRB_Checked"
+                                        Content="Sentence case"
+                                        GroupName="TextCaseRB"
+                                        Tag="Sentence"
+                                        ToolTip="Only the first letter of entire sentence will be uppercase." />
+                                    <RadioButton
+                                        x:Name="TextCaseTitleRB"
+                                        Checked="TextCaseRB_Checked"
+                                        Content="Title Case"
+                                        GroupName="TextCaseRB"
+                                        Tag="Title"
+                                        ToolTip="Every Starting Letter Of Each Word Is Uppercase." />
+                                    <RadioButton
+                                        x:Name="TextCaseUpperRB"
+                                        Checked="TextCaseRB_Checked"
+                                        Content="UPPERCASE"
+                                        GroupName="TextCaseRB"
+                                        Tag="Upper"
+                                        ToolTip="CHANGE EVERYTHING TO UPPERCASE." />
+                                    <RadioButton
+                                        x:Name="TextCaseLowerRB"
+                                        Checked="TextCaseRB_Checked"
+                                        Content="lowercase"
+                                        GroupName="TextCaseRB"
+                                        Tag="Lower"
+                                        ToolTip="change everything to lowercase." />
+                                </UniformGrid>
+                            </StackPanel>
+
+
                             <Grid Margin="0,5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
@@ -317,8 +411,29 @@
                                     VerticalAlignment="Center"
                                     TextChanged="PostfixTB_TextChanged" />
                             </Grid>
+
                             <StackPanel>
-                                <Button Margin="0,2.5" Click="ProcessVideo_Click">
+                                <TextBlock Style="{StaticResource MaterialDesignHelperTextBlock}" Text="And apply these effects" />
+                                <UniformGrid>
+                                    <CheckBox
+                                        x:Name="ReverseVideoCB"
+                                        Checked="ReverseVideoCB_Checked"
+                                        Content="Reverse video"
+                                        ToolTip="Video will be reversed."
+                                        Unchecked="ReverseVideoCB_Unchecked" />
+                                    <CheckBox
+                                        x:Name="MuteVideoCB"
+                                        Checked="MuteVideoCB_Checked"
+                                        Content="Mute video"
+                                        ToolTip="Video will be muted."
+                                        Unchecked="MuteVideoCB_Unchecked" />
+                                </UniformGrid>
+                            </StackPanel>
+                            <StackPanel>
+                                <Button
+                                    x:Name="ProcessButton"
+                                    Margin="0,2.5"
+                                    Click="ProcessVideo_Click">
                                     <StackPanel Orientation="Horizontal">
                                         <Image
                                             Width="24"
@@ -326,11 +441,12 @@
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
                                             Source="pack://application:,,,/Resources/wrench.png" />
-                                        <TextBlock VerticalAlignment="Center" Text="Process" />
+                                        <TextBlock VerticalAlignment="Center" Text="Update" />
                                     </StackPanel>
                                 </Button>
                                 <UniformGrid Margin="0,2.5" Columns="2">
                                     <Button
+                                        x:Name="PreviousButton"
                                         Margin="0,0,1.5,0"
                                         Click="PreviousVideo_Click"
                                         Style="{StaticResource MaterialDesignOutlinedButton}">
@@ -345,6 +461,7 @@
                                         </StackPanel>
                                     </Button>
                                     <Button
+                                        x:Name="NextButton"
                                         Margin="1.5,0,0,0"
                                         Click="SkipVideo_Click"
                                         Style="{StaticResource MaterialDesignOutlinedButton}">
@@ -361,6 +478,7 @@
                                     </Button>
                                 </UniformGrid>
                                 <Button
+                                    x:Name="DeleteButton"
                                     Margin="0,2.5"
                                     Click="DeleteVideo_Click"
                                     Style="{StaticResource MaterialDesignOutlinedSecondaryButton}">
@@ -395,7 +513,7 @@
                                     Grid.Column="1"
                                     VerticalAlignment="Center"
                                     SelectionChanged="ScreenshotIntervalCB_SelectionChanged">
-                                    <ComboBoxItem Tag="255">Every frame</ComboBoxItem>
+                                    <ComboBoxItem Tag="0">Every frame</ComboBoxItem>
                                     <ComboBoxItem Tag="0.1">Every 10th of a second</ComboBoxItem>
                                     <ComboBoxItem Tag="0.5">Every half a second</ComboBoxItem>
                                     <ComboBoxItem Tag="1.0">Every second</ComboBoxItem>
@@ -478,11 +596,6 @@
             </StackPanel>
         </ScrollViewer>
         <StatusBar Grid.Row="1" Grid.ColumnSpan="2">
-            <StatusBarItem x:Name="DebugStatusBarItem" Visibility="Collapsed">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="DebugLabel" />
-                </StackPanel>
-            </StatusBarItem>
             <StatusBarItem>
                 <TextBlock
                     x:Name="StatusLabel"

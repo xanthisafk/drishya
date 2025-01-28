@@ -39,5 +39,8 @@
 &lt;/SerializableConnectionString&gt;</DesignTimeValue>
       <Value Profile="(Default)">Data Source={databasePath};Version=3;</Value>
     </Setting>
+    <Setting Name="DefaultTextCase" Type="System.String" Scope="User">
+      <Value Profile="(Default)">None</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

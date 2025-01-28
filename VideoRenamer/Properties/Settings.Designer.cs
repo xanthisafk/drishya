@@ -152,5 +152,17 @@ namespace Drishya.Properties {
                 return ((string)(this["DatabaseConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("None")]
+        public string DefaultTextCase {
+            get {
+                return ((string)(this["DefaultTextCase"]));
+            }
+            set {
+                this["DefaultTextCase"] = value;
+            }
+        }
     }
 }
